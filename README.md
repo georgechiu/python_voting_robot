@@ -1,2 +1,2 @@
 # python_voting_robot
-A Python voting robt
+A Python voting robot
