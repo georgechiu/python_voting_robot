@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-Created on 2018年12月27日
+Created on 2019年2月25日
 
 @author: George Chiu
 '''
@@ -11,16 +11,17 @@ Created on 2018年12月27日
 import random
 from splinter import Browser
 from selenium.common.exceptions import NoAlertPresentException, TimeoutException, UnexpectedAlertPresentException
+from selenium.webdriver.support.ui import WebDriverWait
 from time import sleep
 
 
-class Voting_Robot(object):
+class Voting_Robot_Yidian(object):
 
     def __init__(self, url=None):
         if url:
             self.url = url
         else:
-            self.url = "http://m.sohu.com/activity/vote/mp-prod/?id=274587223_32&from=timeline"
+            self.url = "http://yidianqinglang.mikecrm.com/FIQEZsT"
         
         self.browser = None
     
@@ -61,27 +62,19 @@ class Voting_Robot(object):
 
 
     def vote(self):
-        for i in range(1, 21):
-            finished = False
-            while not finished:
-                try:
-                    while self.browser.is_element_not_present_by_text("投我一票"):
-                        sleep(1)
-                    finished = True
-                except UnexpectedAlertPresentException as e:
-                    print(u"出错了：%s" % (e))
-                    sleep(random.randint(10, 30))
-            
-            self.browser.click_link_by_text(u"投我一票")
-            print(u"第" + str(i) + u"次投票")
-            sleep(random.randint(1, 5))
+        self.browser.click_link_by_id("opt202747726")
+        self.browser.click_link_by_id("opt202748650")
+        self.browser.click_link_by_id("opt202752630")
+        self.browser.find_by_xpath("//input[contains(@class, 'fbi_input') and contains(@class, 'aria-content')]").fill(self.random_mobile_number())
 
-            alert_present = False
-            while not alert_present:
-                try:
-                    alert = self.browser.get_alert()
-                    alert.accept()
-                    alert_present = True
-                except NoAlertPresentException as e:
-                    print(u"没有弹出确认框：%s" % (e))
-                    sleep(1)
+        self.browser.click_link_by_id("form_submit")
+        sleep(random.randint(1, 2))
+
+        self.browser.find_by_xpath("//input[contains(@class, 'fbi_input') and contains(@class, 'cpt_input')]").fill("ABCD")
+
+        sleep(60)
+    
+    
+    def random_mobile_number(self):
+        prelist=["130","131","132","133","134","135","136","137","138","139","147","150","151","152","153","155","156","157","158","159","186","187","188"]
+        return random.choice(prelist)+"".join(random.choice("0123456789") for i in range(8))
